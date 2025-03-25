@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = null;
+}
+
+@model LoginModel 
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> TenderTracker | Login</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.1/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href=""><b>LOGIN</b></a>
+        </div>
+
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">Login to start your session</p>
+
+                 <form asp-action="LoginForm" method="post" class="d-grid">
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email</label>
+                        <input asp-for="Email" type="email" class=" form-control" placeholder="example@example.com" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input type="password" class=" form-control" asp-for="Password" placeholder="Enter password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="m-3 text-center">
+                        <input type="submit" value="Submit" class="btn btn-outline-primary" />
+                    </div>
+                </form> 
+                @* <p class="mb-0">
+                    <a  asp-action="ForgotPassword" asp-controller="ManagePassword" class="text-center">Forgot Password?</a>
+                </p> *@
+            </div>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger offset-md-1 me-4">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+
+</html>
+

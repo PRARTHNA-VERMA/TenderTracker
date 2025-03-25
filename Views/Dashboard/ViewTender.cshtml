@@ -1,0 +1,322 @@
+﻿@using TenderTracker.Models
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+@{
+
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@model TenderModel
+
+<head>
+    @* <link href="~/dist/css/min.css" rel="stylesheet" /> *@
+
+</head>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success offset-md-1">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage1"] != null)
+            {
+                <script>
+                    alert('@TempData["ErrorMessage1"]');
+                </script>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <script>
+                    alert('@TempData["ErrorMessage"]');
+                </script>
+            }
+            <div>
+                @{
+                    var user_type = Accessor.HttpContext.Session.GetString("user_type");
+                    var Name = Accessor.HttpContext.Session.GetString("Name");
+                }
+            </div>
+            <form asp-action="ViewTender" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+                <div class="card card-default mt-5">
+                    <div class="card-header  bg-primary">
+                        <h3 class="card-title text-center fs-3 w-100">View Tender</h3>
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Empanelment_type" class="fw-bold col-form-label">Empanelment Type</label>
+                                    <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label"></span>
+                                    <select asp-for="@Model.rowData.Empanelment_type" class="form-control" disabled aria-disabled="true">
+                                        <option value="">Select Empanelment Type</option>
+                                        <option value="GEM">GEM</option>
+                                        <option value="NICS">NICS</option>
+                                        <option value="E-Proc">E-Proc</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <label asp-for="@Model.rowData.Tender" class="fw-bold col-form-label">Tender No.</label>
+                                <span asp-validation-for="@Model.rowData.Tender" class="text-danger"></span>
+                                <input asp-for="@Model.rowData.Tender" type="text" class="form-control" disabled aria-disabled="true" />
+
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Department" class="fw-bold col-form-label">Department</label>
+                                    <span asp-validation-for="@Model.rowData.Department" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.Department" type="text" class="form-control" disabled aria-disabled="true" />
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                @* <div class="form-group">
+                                    <label asp-for="@Model.rowData.State" class="form-label">Skill</label>
+                                    <span asp-validation-for="@Model.rowData.State" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.State" type="text" class="form-control" />
+
+                                </div> *@
+
+                                <div class="form-group">
+                                    <label for="StateTextbox" class="fw-bold col-form-label">State</label>
+                                    <span asp-validation-for="@Model.rowData.StateId" class="text-danger"></span>
+                                    <input type="text" id="StateTextbox" class="form-control" value="@Model.rowData?.states?.FirstOrDefault(s => s.StateId == Model.rowData.StateId)?.StateName" disabled aria-disabled="true">
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                @*  <div class="form-group">
+                                    <label asp-for="@Model.rowData.City" class="form-label">Current CTC</label>
+                                    <span asp-validation-for="@Model.rowData.City" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.City" type="text" class="form-control" />
+
+                                </div> *@
+                                <div class="form-group">
+                                    <label for="StateTextbox" class="fw-bold col-form-label">City</label>
+                                    <span asp-validation-for="@Model.rowData.CityId" class="text-danger"></span>
+                                    <input type="text" id="CityTextbox" class="form-control" value="@Model.rowData.City" disabled aria-disabled="true">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Manpower" class="fw-bold col-form-label">Manpower/Project</label>
+                                    <span asp-validation-for="@Model.rowData.Manpower" class="text-danger"></span>
+
+                                    <select asp-for="@Model.rowData.Manpower" class="form-control" disabled aria-disabled="true">
+                                        <option value="">-- Select --</option>
+                                        <option value="Manpower">Manpower</option>
+                                        <option value="Project">Project</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.EMD" class="fw-bold col-form-label">EMD</label>
+                                    <span asp-validation-for="@Model.rowData.EMD" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.EMD" type="text" class="form-control" disabled aria-disabled="true" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Tender_fee" class="fw-bold col-form-label">Tender Fee</label>
+                                    <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.Tender_fee" type="text" class="form-control" disabled aria-disabled="true" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label>
+                                    <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.Pre_bid_date" type="date" class="form-control" disabled aria-disabled="true" />
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Remarks" class="fw-bold col-form-label">Add Remarks</label>
+                                    <span asp-validation-for="@Model.rowData.Remarks" class="text-danger"></span>
+
+                                    @if (!string.IsNullOrEmpty(Model.rowData.tender_remark))
+                                    {
+                                        <!-- If Tender_Remark exists, show a disabled input with the remark -->
+                                        <input type="text" class="form-control" value="@Model.rowData.tender_remark" disabled />
+                                    }
+                                    else
+                                    {
+                                        <!-- If Tender_Remark is null/empty, allow user to enter a remark -->
+                                        <input asp-for="@Model.rowData.Remarks" type="text" class="form-control" placeholder="Enter Remark" />
+                                    }
+
+                                    <!-- Hidden field for ID -->
+                                    <input asp-for="@Model.rowData.id" type="hidden" />
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                                <div class="fw-bold col-form-label">
+                                    <label>Existing File:</label><br />
+                                    @* <a href="@Url.Content(Model.fileUpload.cvlistpdf)" target="_blank">View File</a> *@
+                                    <a href="~/document/@Model.rowData.tender_file_name" target="_blank" margin-right: 10px;" title="View PDF">
+                                        View Current file
+                                    </a>
+                                    <input type="hidden" asp-for="@Model.rowData.tender_file_name" class="custom-file-input mt-3" id="exampleInputFile" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label>
+                                    <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.Tender_due_date" type="date" class="form-control" disabled aria-disabled="true" />
+
+                                </div>
+                            </div>
+
+
+                            @* <div class="col-md-3">
+                                <div class="form-group">
+                                    <label asp-for="@Model.rowData.CV_Name" class="form-label">CV Name</label>
+                                    <span asp-validation-for="@Model.rowData.CV_Name" class="text-danger"></span>
+                                    <input asp-for="@Model.rowData.CV_Name" type="text" class="form-control" />
+
+                                </div>
+                            </div> *@
+
+                        </div>
+
+                        <div class="row">
+                        </div>
+                        <div class="text-center m-3">
+                            @if (!string.IsNullOrEmpty(Model.rowData.tender_remark))
+                            {
+                                <button class="btn btn-success" disabled>Already Remark Added</button>
+                            }
+                            else if (Model.rowData.Name == Name) // Check if Name matches ViewBag.Name
+                            {
+                                <button class="btn btn-primary">SUBMIT</button>
+                            }
+                            else
+                            {
+                                <p class="text-danger">You can not add a remark.</p>
+                            }
+                        </div>
+
+
+                        @* </div> *@
+
+                        @* @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger offset-md-1">
+                        @TempData["ErrorMessage"]
+                    </div>
+                } *@
+
+
+            </form>
+        </div>
+    </section>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/site.js"></script>
+<script>
+    $(function () {
+        bsCustomFileInput.init();
+    });
+</script>
+<a href="~/lib/jquery/dist/jquery.min.map"></a>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script>
+    document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+        const fileName = e.target.files[0]?.name; // Get selected file name
+        if (fileName) {
+            e.target.nextElementSibling.textContent = fileName; // Update label text
+            document.getElementById('fileName').textContent = `Selected file: ${fileName}`;
+        } else {
+            document.getElementById('fileName').textContent = 'No file selected.';
+        }
+    });
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        // When the state dropdown changes
+        $('#StateDropdown').change(function () {
+            var stateId = $(this).val();
+            console.log(stateId);
+            // Clear the city dropdown
+            $('#CityDropdown').empty();
+
+            if (stateId !== '') {
+                $.ajax({
+                    url: '@Url.Action("GetCities", "Dashboard")',
+                    type: 'GET',
+                    data: { stateId: stateId },
+                    success: function (cities) {
+
+                        console.log(cities);    // Log cities data
+                        $('#CityDropdown').empty().append('<option value="">Select City</option>');; // Clear previous options
+                        // Populate the city dropdown with options
+                        //console.log($('#CityDropdown'));
+                        $.each(cities, function (i, city) {
+                            //console.log(city.cityId + ' ' + city.cityName); // Log city data
+                            $('#CityDropdown').append($('<option>', {
+                                value: city.cityId,
+                                text: city.cityName
+                            }));
+                        });
+                        // Set previously selected CityId if available
+                        var selectedCity = "@Model.rowData.CityId";
+                        if (selectedCity) {
+                            $('#CityDropdown').val(selectedCity);
+                        }
+                    },
+                    error: function (err) {
+                        alert('Error loading cities: ' + err);
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
+

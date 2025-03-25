@@ -1,0 +1,307 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+@{
+	ViewData["Title"] = "Upload Excel";
+
+	//Layout = "~/Views/Shared/_Layout.cshtml";
+	Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@* @model ExcelViewUpload *@
+@using System.Data
+
+@if (TempData["SuccessMessage"] != null)
+{
+	<script>
+		alert('@TempData["SuccessMessage"]');
+	</script>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+	<script>
+		alert('@TempData["ErrorMessage"]');
+	</script>
+}
+
+<head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+	<!-- Google Font: Source Sans Pro -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+</head>
+
+<div class="">
+	<section class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="card card-primary mt-2">
+				<div class="card-header">
+					<h3 class="card-title text-center">Upload Excel Sheet</h3>
+				</div>
+
+				<form asp-action="ViewExcel" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+					<div class="card-body">
+						<div class="form-group">
+							<label for="exampleInputFile">Choose an Excel file</label>
+							<div class="form-group">
+								<label for="exampleInputFile">File input</label>
+								<div class="input-group">
+									<div class="custom-file">
+										<input type="file" @* asp-for="@Model.excelUpload.File" *@ class="custom-file-input" id="exampleInputFile">
+										<label class="custom-file-label" for="exampleInputFile">Choose file</label>
+									</div>
+
+								</div>
+							</div>
+							@* <div class="input-group">
+								<div class="custom-file">
+									<input type="file" asp-for="@Model.excelUpload.File" name="excelUpload.File" class="custom-file-input" id="exampleInputFile" accept=".xls,.xlsx" required>
+									<label asp-for="@Model.excelUpload.File" class="custom-file-label" for="exampleInputFile">Choose file</label>
+								</div>
+							</div> *@
+							<span @* asp-validation-for="@Model.excelUpload.File" *@ class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="card-footer">
+						<button type="submit" class="btn btn-primary my-0">Upload Excel</button>
+						@* <button type="button" class="btn btn-primary">Upload CV</button> *@
+					</div>
+				</form>
+				</div>
+			</div>
+
+			<div class="col-md-6">
+				<div class="card card-primary mt-2 my-1">
+					<div class="card-header">
+						<h3 class="card-title text-center">Upload Files</h3>
+					</div>
+
+					<form asp-action="UploadFile" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+						<div class="form-group my-4 mx-3">
+
+							<label for="fileUpload" class="my-2">Upload PDF Files</label>
+							<br />
+							<input type="file" id="fileUpload" name="files" multiple accept=".pdf">
+							<small class="form-text my-3 text-muted">Select files to upload.</small>
+						</div>
+						<div class="card-footer">
+							<button type="submit" class="btn btn-primary my-0 mx-3">Upload Files</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		@*@if (Model?.RowList == null)
+		{
+			<div class="card card-primary mt-2">
+				<div class="card-header">
+					<h3 class="card-title text-center">Upload Excel Sheet</h3>
+				</div>
+
+				<form asp-action="ViewExcel" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+					<div class="card-body">
+						<div class="form-group">
+							<label for="exampleInputFile">Choose an Excel file</label>
+							<div class="form-group">
+								<label for="exampleInputFile">File input</label>
+								<div class="input-group">
+									<div class="custom-file">
+										<input type="file" @* asp-for="@Model.excelUpload.File"  class="custom-file-input" id="exampleInputFile">
+										<label class="custom-file-label" for="exampleInputFile">Choose file</label>
+									</div>
+
+								</div>
+							</div>
+							@* <div class="input-group">
+							<div class="custom-file">
+								<input type="file" asp-for="@Model.excelUpload.File" name="excelUpload.File" class="custom-file-input" id="exampleInputFile" accept=".xls,.xlsx" required>
+								<label asp-for="@Model.excelUpload.File" class="custom-file-label" for="exampleInputFile">Choose file</label>
+							</div>
+						</div> 
+							<span  asp-validation-for="@Model.excelUpload.File"  class="text-danger"></span>
+						</div>
+					</div>
+
+					<div class="card-footer">
+						<button type="submit" class="btn btn-primary">Upload</button>
+						@* <button type="button" class="btn btn-primary">Upload CV</button> 
+					</div>
+				</form>
+			</div>
+
+			@* <div class="card card-primary mt-2">
+				<div class="card-header">
+					<h3 class="card-title text-center">Upload CV</h3>
+				</div>
+
+				<form asp-action="UploadCV" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+					<div class="card-body">
+						<div class="form-group">
+							<label for="exampleInputFile">Upload Folder</label>
+							<div class="form-group">
+								<!--<label for="exampleInputFile">File input</label>-->
+								<div class="input-group">
+									<div class="custom-file">
+										<input asp-for="@Model.fileUpload.Files" type="file" id="folderUpload" name="files" multiple webkitdirectory>
+										<small class="form-text text-muted">Select an entire folder to upload.</small>
+										<label class="custom-file-label" for="exampleInputFile">Choose file</label>
+									</div>
+
+								</div>
+							</div>
+							@* <div class="input-group">
+							<div class="custom-file">
+								<input type="file" asp-for="@Model.excelUpload.File" name="excelUpload.File" class="custom-file-input" id="exampleInputFile" accept=".xls,.xlsx" required>
+								<label asp-for="@Model.excelUpload.File" class="custom-file-label" for="exampleInputFile">Choose file</label>
+							</div>
+						</div> @
+							@*<span asp-validation-for="@Model.excelUpload.File" class="text-danger"></span>@
+						</div>
+					</div>
+
+					<div class="card-footer">
+						<button type="submit" class="btn btn-primary">Upload Folder</button>
+						@* <button type="button" class="btn btn-primary">Upload CV</button> @
+					</div>
+				</form>
+			</div> 
+
+			<section>
+				<div class="card card-primary mt-2 my-1">
+					<div class="card-header">
+						<h3 class="card-title text-center">Upload CV</h3>
+					</div>
+
+					<form asp-action="UploadCV" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
+						<div class="form-group my-2 mx-3">
+							<label for="folderUpload">Upload Folder</label>
+							<input @* asp-for="@Model.fileUpload.Files"  type="file" id="folderUpload" name="files" multiple webkitdirectory>
+							<small class="form-text text-muted">Select an entire folder to upload.</small>
+						</div>
+						<button type="submit" class="btn btn-primary my-4 mx-3">Upload Folder</button>
+					</form>
+				</div>
+			</section> 
+		}
+		else
+		{
+			<div class="card card-primary mt-2">
+				<div class="card-header">
+					<h3 class="card-title text-center">Uploaded Data</h3>
+				</div>
+				<div class="card-body">
+					<table id="example" class="table-responsive table-bordered table-striped table-hover" style="width:100%">
+						<thead>
+							<tr>
+								<th>Sl.</th>
+								<th>Name</th>
+								<th>Qualification</th>
+								<th>Experience</th>
+								<th>Skill</th>
+								<th>Current_CTC</th>
+								<th>Expected_CTC</th>
+								<th>Notice_Period</th>
+								<th>Contact_No</th>
+								<th>Mail_Id</th>
+								<th>Remarks</th>
+								<th>Hr_marks</th>
+								<th>Tech_marks</th>
+								<th>CV_Name</th>
+							</tr>
+						</thead>
+						<tbody>
+							@*  @foreach (var row in Model.RowList) 
+							@for (int i = 0; i < Model.RowList.Count; i++)
+							{
+								<tr>
+									<td>@Model.RowList[i].Sl</td>
+									<td>@Model.RowList[i].Name</td>
+									<td>@Model.RowList[i].Qualification</td>
+									<td>@Model.RowList[i].Experience</td>
+									<td>@Model.RowList[i].Skill</td>
+									<td>@Model.RowList[i].Current_CTC</td>
+									<td>@Model.RowList[i].Expected_CTC</td>
+									<td>@Model.RowList[i].Notice_Period</td>
+									<td>@Model.RowList[i].Contact_No</td>
+									<td>@Model.RowList[i].Mail_Id</td>
+									<td>@Model.RowList[i].Remarks</td>
+									<td>@Model.RowList[i].Hr_marks</td>
+									<td>@Model.RowList[i].Tech_marks</td>
+									<td>@Model.RowList[i].CV_Name</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+				<div class="card-footer">
+
+					<form asp-action="SaveData" asp-controller="Dashboard" method="post">
+						@for (int i = 0; i < Model.RowList.Count; i++)
+						{
+							<input type="hidden" @* asp-for="@Model.RowList[i].Sl"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Name"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Qualification"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Experience"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Skill"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Current_CTC"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Expected_CTC"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Notice_Period"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Contact_No"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Mail_Id"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Remarks"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Hr_marks"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].Tech_marks"  />
+							<input type="hidden" @* asp-for="@Model.RowList[i].CV_Name"  />
+							<!-- Hidden fields to send session data -->
+							@* <input type="hidden" name="UserID" value="@userId" /> *
+						@* <input type="hidden" name="Name" value="@Name" asp-for="@Model.loginlist."/>
+				<input type="hidden" name="Email" value="@Email" asp-for="@Model.loginlist">
+						}
+						<button type="submit" class="btn btn-primary">Save</button>
+					</form>
+				</div>
+			</div>
+		}*@
+	</section>
+</div>
+
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+
+
+
+<script>
+	$(document).ready(function () {
+		$('#example').DataTable();
+	});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+<script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+<script src="~/js/site.js"></script>
+<script>
+	$(function () {
+		bsCustomFileInput.init();
+	});
+</script>
+<a href="~/lib/jquery/dist/jquery.min.map"></a>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script>
+	document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+		const fileName = e.target.files[0]?.name; // Get selected file name
+		if (fileName) {
+			e.target.nextElementSibling.textContent = fileName; // Update label text
+			document.getElementById('fileName').textContent = `Selected file: ${fileName}`;
+		} else {
+			document.getElementById('fileName').textContent = 'No file selected.';
+		}
+	});
+</script>

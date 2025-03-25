@@ -1,0 +1,306 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Approve Tender";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+}
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor Accessor
+
+@model IEnumerable<TenderTracker.Models.TenderModel>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <script>
+        alert('@TempData["SuccessMessage"]');
+    </script>
+}
+@if (TempData["ErrorMessage1"] != null)
+{
+    <script>
+        alert('@TempData["ErrorMessage1"]');
+    </script>
+}
+
+<div class="content-wrapper">
+    <section>
+        <div>
+            @{
+                var user_type = Accessor.HttpContext.Session.GetString("user_type");
+                var Name = Accessor.HttpContext.Session.GetString("Name");
+            }
+        </div>
+        <div class="container-fluid">
+            <div class="row m-3">
+                <h3 class="col-md-8">Assign Tenders</h3>
+                @* <div class="col-md-4 d-flex justify-content-end">
+                <a asp-controller="Dashboard" asp-action="AddCredit" method="post" class="btn btn-primary "> + Add Credit</a>
+            </div> *@
+            </div>
+
+
+            <div class="card">
+                <div class="card-body">
+                    @* <div class="d-flex justify-content-end mb-2">
+                        <button id="exportButton" class="btn btn-success">Export</button>
+                    </div> *@
+                    <form id="approveForm" asp-action="ApprovalTenderList" asp-controller="Dashboard" method="post">
+                        <table id="example" class="table table-responsive table-bordered table-striped table-hover" style="display:block;">
+                            <thead>
+
+                                <tr>
+                                    <th class="bg-primary text-light">Select</th>
+                                    <th class="bg-primary text-light">S.NO.</th>
+                                    <th class="bg-primary text-light">Empanelment Type</th>
+                                    <th class="bg-primary text-light">Tender</th>
+                                    <th class="bg-primary text-light">Department</th>
+                                    <th class="bg-primary text-light">State</th>
+                                    <th class="bg-primary text-light">City</th>
+                                    <th class="bg-primary text-light">Manpower/Project</th>
+                                    <th class="bg-primary text-light">EMD</th>
+                                    <th class="bg-primary text-light">Tender Fee</th>
+                                    <th class="bg-primary text-light">Pre-Bid Date</th>
+                                    <th class="bg-primary text-light">Tender Due Date</th>
+                                    @* <th class="bg-primary text-light">Remarks</th> *@
+                                    @*<th class="bg-primary text-light">created_date</th>*@
+                                    <th class="bg-primary text-light">Assigned To</th>
+                                    <th class="bg-primary text-light">Submitted Date</th>
+
+                                    <th class="bg-primary text-light">Tender File</th>
+
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @{
+                                    int i = 0;
+
+                                    @foreach (var item in Model)
+                                    {
+                                        i++;
+                                        <tr>
+                                            @*<td><input type="checkbox" class="approve-checkbox" value="@item.rowData.id" asp-for="@item.IsSelected"/>
+                                            @Html.HiddenFor(modelItem => item.rowData.id)
+											@*<input type="hidden" name="id" value="@item.rowData.id" />*
+                                        </td>
+                                            <td>
+                                                <input type="checkbox" class="approve-checkbox" name="model[@i].IsSelected" value="true" />
+                                                <input type="hidden" name="model[@i].rowData.id" value="@item.rowData.id" />
+                                            </td>*@
+                                            <td>
+                                                @*@Html.CheckBoxFor(modelItem => item.IsSelected, new { @class = "data-checkbox" })
+                                                <input type="checkbox" class="data-checkbox" id="data-checkbox" name="model[@i].IsSelected" modelItem=> @item.IsSelected />*@
+                                                <input type="checkbox" class="data-checkbox" id="data-checkbox-@i" name="model[@i].IsSelected" value="true" @(item.IsSelected ? "checked" : "") @(item.rowData.status == 2 ? "disabled" : "") />
+                                                <input type="hidden" id="tender_id" name="model[@i].IsSelected" value="false" />
+
+                                                <input type="hidden" name="id" id="tender_id" value="@item.rowData.id" />
+                                            </td>
+                                            <td>@i</td>
+                                            <td>@item.rowData.Empanelment_type</td>
+                                            <td>@item.rowData.Tender</td>
+                                            <td>@item.rowData.Department</td>
+                                            <td>@item.rowData.State</td>
+                                            <td>@item.rowData.City</td>
+                                            <td>@item.rowData.Manpower</td>
+                                            <td>@item.rowData.EMD</td>
+                                            <td>@item.rowData.Tender_fee</td>
+                                            <td>@item.rowData.Pre_bid_date</td>
+                                            <td>@item.rowData.Tender_due_date</td>
+                                            @*<td>@item.rowData.Remarks</td>*@
+                                            <td>
+                                                @(string.IsNullOrEmpty(item.rowData.Name) ? "N/A" : item.rowData.Name)
+
+                                            </td>
+                                            <td>@(Convert.ToDateTime(item.rowData.created_date).ToString("dd-MM-yyyy"))</td>
+
+                                            @* <td>@(Convert.ToDateTime(item.created_date).ToString("dd-MM-yyyy"))</td>*@
+
+                                            @{
+                                                <td>
+                                                    <a href="~/document/@item.rowData.tender_file_name" target="_blank" style="color:red; margin-right: 10px;" title="View PDF">
+                                                        View Doc
+                                                    </a>
+                                                </td>
+                                            }
+                                            @*<td>
+                                            <a asp-action="editCVList" asp-controller="Dashboard" asp-route-id="@item.excelData_id" class="btn btn-primary">View</a>
+                                        </td>*@
+                                            @*@if (Convert.ToInt32(user_type) == 1)
+                                        {
+                                            <td>
+                                                <a asp-action="editCVList" asp-controller="Dashboard" asp-route-id="@item.excelData_id" class="btn btn-primary">Edit</a>
+                                                <input type="hidden" name="id" value="@item.excelData_id" />
+                                            </td>
+                                        }
+                                        @*<td>@((Convert.ToDateTime(row["creditdate"]).ToString("dd-MM-yyyy")))</td>*@
+                                            <!--<td>row["entrydate"]</td>-->
+
+                                            @* @if (Convert.ToInt32(user) == 1)
+                                            {
+                                                 <td>
+                                                    <a asp-action="EditCredit" asp-controller="Dashboard" asp-route-id="@row["creditID"]" class="btn btn-primary">Edit</a>
+                                                    <a asp-action="DeleteCredit" asp-controller="Dashboard" asp-route-id="@row["creditID"]" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this?');">Delete</a>
+                                                </td>
+                                            }*@
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+
+                        </table>
+                        <button id="saveDataButton" class="btn btn-success mt-3">Assign Selected</button>
+                    </form>
+                </div>
+
+                @*  <div class="card-footer clearfix">
+                                <ul class="pagination pagination-sm m-0 float-end">
+                                <li class="page-item"> <a class="page-link" href="#">&laquo;</a> </li>
+                                <li class="page-item"> <a class="page-link" href="#">1</a> </li>
+                                <li class="page-item"> <a class="page-link" href="#">2</a> </li>
+                                <li class="page-item"> <a class="page-link" href="#">3</a> </li>
+                                <li class="page-item"> <a class="page-link" href="#">&raquo;</a> </li>
+                                </ul>
+                                </div> *@
+
+            </div>
+
+
+
+        </div>
+    </section>
+</div>
+<!--data table ui ends-->
+
+
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+
+<!-- Include DataTables Buttons library -->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
+<script>
+    $(document).ready(function () {
+        var successMessage = '@TempData["SuccessMessage"]';
+        var errorMessage = '@TempData["ErrorMessage1"]';
+
+        if (successMessage) {
+            alert(successMessage);
+        }
+        if (errorMessage) {
+            alert(errorMessage);
+        }
+    });
+</script>
+
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        var table = $('#example').DataTable({
+            dom: '<"d-flex justify-content-between"fB>rt<"d-flex justify-content-between"lp i>',
+            buttons: [
+                {
+                    extend: 'csvHtml5',
+                    text: 'Export',
+                    class: 'btn btn-success',
+                }
+            ]
+        });
+
+        // Trigger export when clicking the custom button
+        $('#exportButton').on('click', function () {
+            table.button('.buttons-excel').trigger();
+        });
+
+         // Limit the number of checked checkboxes to 4
+        // $(".data-checkbox").on("change", function () {
+        //     if ($(".data-checkbox:checked").length > 4) {
+        //         alert("You can only select up to 4 tenders.");
+        //         return;
+        //         //$(this).prop("checked", false); // Uncheck the last selected checkbox
+        //     }
+        // });
+
+        // When the "Save Data" button is clicked
+        $("#saveDataButton").click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var selectedItems = [];
+
+            // Iterate through all checked checkboxes
+            $(".data-checkbox:checked").each(function () {
+                var row = $(this).closest("tr"); // Get the closest row
+
+                // Extract the tender ID correctly from the hidden input
+                var tender_id = row.find("input[name='id']").val();
+
+                // Debugging logs
+                //console.log("Tender ID:", tender_id);
+
+                // Create an object for the selected item and add it to the array
+                selectedItems.push({
+                    tender_id: tender_id,
+                    IsSelected: true
+                });
+            });
+
+            //console.log("Selected Items:", selectedItems);
+
+            if (selectedItems.length === 0) {
+                alert("Please assign at least 1 Tender");
+                return;
+            }
+            //console.log("length",selectedItems.length");
+            if (selectedItems.length > 4) {
+                alert("You can only select up to 4 tenders.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("ApprovalTenderList", "Dashboard")', // Ensure correct URL format
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(selectedItems),
+                success: function (response) {
+                    if (response === "1") {
+                        window.location.href = '@Url.Action("ApprovalTenderList", "Dashboard")';
+                    } 
+                    else if(response === "-1")
+                    {
+                        alert("User already has 4 active assignments");
+                        //location.reload();
+                    }
+                    else {
+                        alert("Tender Assigned successfully.");
+                        location.reload();
+                    }
+                                      
+                    
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error approving tenders:", error);
+                    alert("Error approving tenders.");
+                }
+            });
+        });
+    });
+</script>
