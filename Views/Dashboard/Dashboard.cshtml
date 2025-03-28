@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Dashboard";
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
@@ -43,9 +42,7 @@
 
             <div class="card">
                 <div class="card-body">
-                   
-
-                    <table id="example" class="table table-responsive table-bordered table-striped table-hover" style="display:block;">
+                    <table id="example" class="table table-responsive table-bordered  table-hover" style="display:block;">
                         <thead>
                             <tr>
                                 <th class="bg-primary text-light">S.NO.</th>
@@ -65,11 +62,13 @@
                         </thead>
                         <tbody id="tenderTableBody">
                             @{
+
                                 int i = 0;
                                 foreach (var item in Model)
                                 {
                                     i++;
-                                    var remarkStatus = item.rowData.tender_remark; // Get remark_status value
+                                    // Retrieve remark status; if null, leave empty
+                                    var remarkStatus = item.rowData.tender_remark ?? "";
                                     <tr data-remark-status="@remarkStatus">
                                         <td>@i</td>
                                         <td>@item.rowData.Empanelment_type</td>
@@ -86,7 +85,7 @@
                                         {
                                             <td>
                                                 @{
-                                                    var linkColor = string.IsNullOrEmpty(item.rowData.tender_remark) ? "btn-primary" : "btn-success";
+                                                    var linkColor = string.IsNullOrEmpty(item.rowData.tender_remark) ? "btn-primary" : "btn-primary";
                                                 }
                                                 <a asp-action="ViewTender" asp-controller="Dashboard" asp-route-id="@item.rowData.id" class="btn @linkColor">View</a>
                                             </td>
@@ -102,34 +101,31 @@
     </section>
 </div>
 
-<!-- ✅ DataTables CSS -->
+<!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.1.0/css/buttons.dataTables.min.css">
 
-<!-- ✅ jQuery (Required for DataTables) -->
+<!-- jQuery (Required for DataTables) -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<!-- ✅ DataTables JavaScript -->
+<!-- DataTables JavaScript -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.1.0/js/dataTables.buttons.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.1.0/js/buttons.html5.min.js"></script>
 
-
-
-
-
-<!-- ✅ DataTables Initialization with Pagination -->
+<!-- DataTables Initialization with RowCallback for Custom Row Coloring -->
 <script>
     $(document).ready(function () {
         var table = $('#example').DataTable({
-            paging: true,          // Enable pagination
-            lengthMenu: [5, 10, 25, 50], // Rows per page options
-            pageLength: 10,        // Default number of rows per page
-            searching: true,       // Enable search functionality
-            ordering: true,        // Enable sorting
-            info: true,            // Show table info
-            responsive: true,      // Make the table responsive
+            stripeClasses: [],  // Disable default stripe classes
+            paging: true,
+            lengthMenu: [5, 10, 25, 50],
+            pageLength: 10,
+            searching: true,
+            ordering: true,
+            info: true,
+            responsive: true,
             language: {
                 "paginate": {
                     "first": "First",
@@ -145,22 +141,54 @@
                     text: 'Export',
                     className: 'btn btn-success'
                 }
-            ]
+            ],
+            // Use rowCallback to apply our custom color based on data-remark-status
+            rowCallback: function (row, data, index) {
+
+                var remarkStatus = $(row).attr("data-remark-status");
+                // If remarkStatus is non-empty and not "N/A", set one color; otherwise, another.
+                if (remarkStatus && remarkStatus.trim() !== "" && remarkStatus !== "N/A") {
+                    // $(row).css("background-color", "#D4EDDA").css("color", "black");
+                $(row).css({
+            "background-color": "#D4EDDA", // Light Green
+            "color": "black",
+            "border": "1px solid #dee2e6" // Adds border
+        });
+                } else {
+                  //  $(row).css("background-color", "#F8F9FA").css("color", "black").css("border", "1px solid #dee2e6");
+                $(row).css({
+            "background-color": "#F8F9FA", // Light Gray
+            "color": "black",
+            "border": "1px solid #dee2e6"
+        });
+                }
+            }
         });
 
-        // ✅ Ensure Export Button Works
+        // Force export button functionality if needed
         $('#exportButton').on('click', function () {
             table.button('.buttons-csv').trigger();
         });
-
-        // ✅ Row Color Based on Remark Status
+    });
+           $(document).ready(function () {
         $("#tenderTableBody tr").each(function () {
-            var remarkStatus = $(this).attr("data-remark-status");
-            if (remarkStatus && remarkStatus !== "N/A") {
-                $(this).css("background-color", "red").css("color", "white");
-            } else {
-                $(this).css("background-color", "gray").css("color", "white");
-            }
+            $(this).css("border", "1px solid #dee2e6"); // Apply blue border to tr
+            $(this).find("td").css("border", "1px solid #dee2e6"); // Apply blue border to td
         });
     });
+
 </script>
+
+<!-- Custom CSS to force cell styling to inherit row colors -->
+<style>
+    /* Override DataTables sorting_1 class on table cells */
+    #tenderTableBody tr td.sorting_1 {
+        background-color: inherit !important;
+        color: inherit !important;
+    }
+    /* Ensure all cells inside rows with our custom data attribute inherit the row's styling */
+    #tenderTableBody tr[data-remark-status] td {
+        background-color: inherit !important;
+        color: inherit !important;
+    }
+</style>

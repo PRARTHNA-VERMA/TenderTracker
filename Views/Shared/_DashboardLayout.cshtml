@@ -100,16 +100,19 @@
                                 </a>
                             </li>
                         }
+                        @if (user_type != "3")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-action="PendingforRemark" asp-controller="Dashboard">
+                                    <i class="nav-icon bi bi-palette"></i>
+                                    <p>
+                                        Pending Remark List
+                                        <i class="nav-arrow bi bi-chevron-right"></i>
+                                    </p>
+                                </a>
+                            </li>
+                        }
                        
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="PendingforRemark" asp-controller="Dashboard">
-                                <i class="nav-icon bi bi-palette"></i>
-                                <p>
-                                    Pending Remark List 
-                                    <i class="nav-arrow bi bi-chevron-right"></i>
-                                </p>
-                            </a>
-                        </li>
                         @if (user_type != "2")
                         {
                             <li class="nav-item">
@@ -125,15 +128,15 @@
 
                         @if (user_type != "3")
                         {
-                            <li class="nav-item">
+                            @* <li class="nav-item">
                                 <a class="nav-link" asp-action="ApprovalTenderList" asp-controller="Dashboard">
                                     <i class="nav-icon bi bi-palette"></i>
                                     <p>
-                                        Assign Tenders
+                                         Tenders List
                                         <i class="nav-arrow bi bi-chevron-right"></i>
                                     </p>
                                 </a>
-                            </li>
+                            </li> *@
                         }
                         @*  <li class="nav-item">
                             <a class="nav-link" asp-action="Credit" asp-controller="Dashboard">

@@ -167,12 +167,11 @@
                             
                             <div class="col-md-4">@* 
                                 <div class="col-md-8"> *@
-                                    <div class="form-group">
-                                        <label for="exampleInputFile" class="fw-bold  col-form-label">Choose file</label>
-                                        <span asp-validation-for="@Model.rowData.tender_file" class="text-danger"></span>
-                                        <input type="file" asp-for="@Model.rowData.tender_file" class="custom-file-input mt-3" id="exampleInputFile">
-
-                                    </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile" class="fw-bold col-form-label">Choose file</label>
+                                    <span asp-validation-for="@Model.rowData.tender_file" class="text-danger"></span>
+                                    <input type="file" asp-for="@Model.rowData.tender_file" class="custom-file-input mt-3" id="exampleInputFile" accept=".pdf">
+                                </div>
                                @*  </div> *@
                             </div>
 
@@ -289,6 +288,21 @@
         });
     });
 </script>
+<script>
+    document.getElementById("exampleInputFile").addEventListener("change", function () {
+        const fileInput = this;
+        const fileName = fileInput.files[0]?.name;
+        const allowedExtensions = /\.pdf$/i;
 
+        if (fileName) {
+            if (!allowedExtensions.exec(fileName)) {
+                alert("Invalid file type. Please upload only PDF files.");
+                fileInput.value = ""; // Clear the file input
+                return;
+            }
+            fileInput.nextElementSibling.textContent = fileName; // Update label text
+        }
+    });
+</script>
 
 

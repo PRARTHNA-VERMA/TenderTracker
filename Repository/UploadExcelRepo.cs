@@ -322,5 +322,48 @@ namespace TenderTracker.Repository
             }
             return result;
         }
+        public int SaveTenderData(List<TenderData> dataList)
+        {
+            var Name = _httpContextAccessor.HttpContext.Session.GetString("Name");
+
+            int rowsInserted = 0;
+
+            using (var conn = new SqlConnection(ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[Sp_insertTender_data]", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    conn.Open();
+
+                    foreach (var data in dataList)
+                    {
+                        cmd.Parameters.Clear(); // Clear previous parameters
+
+                        cmd.Parameters.AddWithValue("@Empanelment_type", data.Empanelment_type);
+                        cmd.Parameters.AddWithValue("@Tender", data.Tender);
+                        cmd.Parameters.AddWithValue("@Department", data.Department);
+                        cmd.Parameters.AddWithValue("@State", data.State);
+                        cmd.Parameters.AddWithValue("@City", data.City);
+                        cmd.Parameters.AddWithValue("@Manpower", data.Manpower);
+                        cmd.Parameters.AddWithValue("@EMD", data.EMD);
+                        cmd.Parameters.AddWithValue("@Tender_fee", data.Tender_fee);
+                        cmd.Parameters.AddWithValue("@Pre_bid_date", data.Pre_bid_date);
+                        cmd.Parameters.AddWithValue("@Tender_due_date", data.Tender_due_date);
+                        //cmd.Parameters.Add("@Pre_bid_date", SqlDbType.DateTime).Value =data.Pre_bid_date == DateTime.MinValue ? DBNull.Value : (object)data.Pre_bid_date;
+                        //cmd.Parameters.Add("@Tender_due_date", SqlDbType.DateTime).Value =                   data.Tender_due_date == DateTime.MinValue ? DBNull.Value : (object)data.Tender_due_date;
+
+                        cmd.Parameters.AddWithValue("@submitted_by", Name);
+
+                        cmd.Parameters.AddWithValue("@tender_file", data.filename);
+                        cmd.Parameters.AddWithValue("@action", "insertexcel");
+                        rowsInserted += cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            return rowsInserted;
+        }
+
     }
 }

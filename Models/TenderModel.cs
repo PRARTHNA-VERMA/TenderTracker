@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
+
 namespace TenderTracker.Models
 {
     public class TenderModel
@@ -12,6 +13,28 @@ namespace TenderTracker.Models
         public int tender_id { get; set; }
 
         public List<TenderModel> Tendermodel { get; set; }
+    }
+    public class ExcelViewUpload
+    {
+       
+        public IFormFile? ExcelUpload { get; set; }
+
+        public List<TenderData> TenderList { get; set; }
+    }
+    public class TenderData
+    {
+        public string? Empanelment_type { get; set; }
+        public int? Tender { get; set; }
+        public string? Department { get; set; }
+        public string? State { get; set; }
+        public string? City { get; set; }
+        public string? Manpower { get; set; }
+        public string? filename { get; set; }
+        public decimal? EMD { get; set; }
+        public decimal? Tender_fee { get; set; }
+
+        public DateOnly? Pre_bid_date { get; set; }  // Nullable DateTime
+        public DateOnly? Tender_due_date { get; set; }  // Nullable DateTime
     }
 
     public class TenderModelData

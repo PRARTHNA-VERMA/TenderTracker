@@ -5,6 +5,9 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using System.Reflection;
 using TenderTracker.Filter;
+using System.ComponentModel;
+using System.Globalization;
+using OfficeOpenXml;
 
 namespace TenderTracker.Controllers
 {
@@ -93,9 +96,18 @@ namespace TenderTracker.Controllers
             ModelState.Remove("Tendermodel");
             //if (ModelState.IsValid)
             {
-                //model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId);
-                //model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId);
-                int result = _adminRepo.AddRemarks(model);
+                if (string.IsNullOrEmpty(model.rowData.Remarks))
+                {
+                    TempData["ErrorMessage"] = "Please enter remarks";
+                    return RedirectToAction("Dashboard");
+                }
+                else
+                {
+
+              
+                    //model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId);
+                    //model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId);
+                    int result = _adminRepo.AddRemarks(model);
                 if (result == 0)
                 {
                     TempData["ErrorMessage"] = "Remark for this Tender has already been Added.";
@@ -113,7 +125,7 @@ namespace TenderTracker.Controllers
                     TempData["ErrorMessage1"] = "Can't add Remarks before Assigning";
                     return RedirectToAction("Dashboard");
                 }
-
+                }
             }
             //model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
             return View(model);
@@ -304,85 +316,75 @@ public IActionResult ApproveTenders(List<TenderModel> model)
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult ViewExcel(ExcelViewUpload model)
-        //{
-        //    if (model.excelUpload == null || model.excelUpload.File.Length == 0)
-        //    {
-        //        ViewBag.ErrorMessage = "Please upload a valid Excel file.";
-        //        return View(model);
-        //    }
+        [HttpPost]
+        public IActionResult ViewExcel(ExcelViewUpload model)
+        {
+            if (model.ExcelUpload == null || model.ExcelUpload.Length == 0)
+            {
+                ViewBag.ErrorMessage = "Please upload a valid Excel file.";
+                return View(model);
+            }
 
-        //    List<RowData> rowList = new List<RowData>();
-        //    try
-        //    {
-        //        using (var package = new ExcelPackage(model.excelUpload.File.OpenReadStream()))
-        //        {
-        //            var worksheet = package.Workbook.Worksheets[0]; // Get the first sheet
-        //            var rowCount = worksheet.Dimension.Rows;
+            List<TenderData> tenderList = new List<TenderData>();
 
-        //            for (int row = 2; row <= rowCount; row++) // Skip header
-        //            {
-        //                var rowData = new RowData
-        //                {
-        //                    Sl = worksheet.Cells[row, 1].Text,
-        //                    Name = worksheet.Cells[row, 2].Text,//DateTime.TryParse(worksheet.Cells[row, 2].Text, out var parsedDate) ? parsedDate : (DateTime?)null,
-        //                    Qualification = worksheet.Cells[row, 3].Text,
-        //                    Experience = worksheet.Cells[row, 4].Text,
-        //                    Skill = worksheet.Cells[row, 5].Text,
-        //                    Current_CTC = worksheet.Cells[row, 6].Text,
-        //                    Expected_CTC = worksheet.Cells[row, 7].Text,
-        //                    Notice_Period = worksheet.Cells[row, 8].Text,
-        //                    Contact_No = worksheet.Cells[row, 9].Text,
-        //                    Mail_Id = worksheet.Cells[row, 10].Text,
-        //                    Remarks = worksheet.Cells[row, 11].Text,
-        //                    Hr_marks = worksheet.Cells[row, 12].Text,
-        //                    Tech_marks = worksheet.Cells[row, 13].Text,
-        //                    CV_Name = worksheet.Cells[row, 14].Text
-        //                };
-        //                rowList.Add(rowData);
-        //            }
-        //        }
+            try
+            {
+                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
-        //        model.RowList = rowList;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.ErrorMessage = $"An error occurred: {ex.Message}";
-        //    }
+                using (var package = new ExcelPackage(model.ExcelUpload.OpenReadStream()))
+                {
+                    var worksheet = package.Workbook.Worksheets[0]; // First sheet
+                    int rowCount = worksheet.Dimension.Rows;
 
-        //    return View(model);
-        //}
+                    for (int row = 2; row <= rowCount; row++) // Skip header
+                    {
+                        var tenderData = new TenderData
+                        {
+                            Empanelment_type = worksheet.Cells[row, 1].Text,
+                            Tender = int.TryParse(worksheet.Cells[row, 2].Text, out var tender) ? tender : 0,
+                            Department = worksheet.Cells[row, 3].Text,
+                            State = worksheet.Cells[row, 4].Text,
+                            City = worksheet.Cells[row, 5].Text,
+                            Manpower = worksheet.Cells[row, 6].Text,
+                            EMD = decimal.TryParse(worksheet.Cells[row, 7].Text, out var emd) ? emd : 0,
+                            Tender_fee = decimal.TryParse(worksheet.Cells[row, 8].Text, out var fee) ? fee : 0,
+                            //Pre_bid_date = DateTime.TryParseExact(worksheet.Cells[row, 9].Text, "dd-MM-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var preBidDate) ? preBidDate : DateTime.MinValue,
+                            //Tender_due_date = DateTime.TryParseExact(worksheet.Cells[row, 10].Text, "dd-MM-yy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dueDate) ? dueDate : DateTime.MinValue,
+                            Pre_bid_date = DateTime.TryParse(worksheet.Cells[row, 9].Text, out var preBidDate)
+    ? DateOnly.FromDateTime(preBidDate)
+    : default,
 
-        //[HttpPost]
-        //public IActionResult SaveData([FromForm] ExcelViewUpload model)
-        //{
-        //    if (model.RowList == null || !model.RowList.Any())
-        //    {
-        //        ViewBag.ErrorMessage = "No data available to save.";
-        //        return RedirectToAction("Dashboard");
-        //    }
+                            Tender_due_date = DateTime.TryParse(worksheet.Cells[row, 10].Text, out var dueDate)
+    ? DateOnly.FromDateTime(dueDate)
+    : default,
+                            
+                            filename = worksheet.Cells[row, 11].Text,
+                        };
 
-        //    try
-        //    {
-        //        int rowsAffected = _adminRepo.SaveExcelData(model.RowList);
-        //        if (rowsAffected > 0)
-        //        {
-        //            TempData["SuccessMessage"] = "Uploaded Successfully";
-        //            return RedirectToAction("Dashboard");
-        //        }
+                        tenderList.Add(tenderData);
+                    }
+                }
 
+                // **Save data to the database**
+                int rowsAffected = _adminRepo.SaveTenderData(tenderList);
 
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ViewBag.ErrorMessage = $"Error while saving data: {ex.Message}";
-        //    }
+                if (rowsAffected > 0)
+                {
+                    TempData["SuccessMessage"] = "Excel data uploaded and saved successfully!";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "No records saved. Please check your data.";
+                }
 
-        //    TempData["ErrorMessage"] = "Uploading Failed, Email or Contact already Exists";
-        //    return RedirectToAction("ViewExcel");
-        //}
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = $"An error occurred: {ex.Message}";
+            }
 
+            return RedirectToAction("Dashboard");
+        }
         public IActionResult AssignTenderList()
         {
             
