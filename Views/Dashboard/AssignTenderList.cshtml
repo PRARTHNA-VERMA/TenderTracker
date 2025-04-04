@@ -276,18 +276,18 @@
             }
 
             $.ajax({
-                url: '@Url.Action("ApprovalTenderList", "Dashboard")', // Ensure correct URL format
+                url: '@Url.Action("AssignTenderList", "Dashboard")', // Ensure correct URL format
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(selectedItems),
                 success: function (response) {
                     if (response === "1") {
-                        window.location.href = '@Url.Action("ApprovalTenderList", "Dashboard")';
+                        window.location.href = '@Url.Action("AssignTenderList", "Dashboard")';
                     }
                     else if(response === "-1")
                     {
                         alert("User already has 4 active assignments");
-                        //location.reload();
+                        location.reload();
                     }
                     else {
                         alert("Tender Assigned successfully.");

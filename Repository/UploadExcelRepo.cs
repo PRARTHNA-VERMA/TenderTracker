@@ -231,7 +231,7 @@ namespace TenderTracker.Repository
             return JsonConvert.SerializeObject(dt);
         }
 
-        public int ApproveTender(int Tender_id)
+        public int ApproveTender(List<int> selectedTenderIds)
         {
             var Name = _httpContextAccessor.HttpContext.Session.GetString("Name");
             var id = _httpContextAccessor.HttpContext.Session.GetString("id");
@@ -239,17 +239,20 @@ namespace TenderTracker.Repository
             int result = 0;
             try
             {
-                using (SqlConnection conn = new SqlConnection(ConnectionString))
+                for (int i = 0; i < selectedTenderIds.Count ; i++)
                 {
-                    using (SqlCommand cmd = new SqlCommand("[dbo].[Sp_insertTender_data]", conn))
+                    using (SqlConnection conn = new SqlConnection(ConnectionString))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.AddWithValue("@Tender_id", Tender_id);
-                        cmd.Parameters.AddWithValue("@user_id", user_id);
-                        cmd.Parameters.AddWithValue("@action", "assign");
-                        conn.Open();
-                        result = (int)cmd.ExecuteScalar();
-                        conn.Close();
+                        using (SqlCommand cmd = new SqlCommand("[dbo].[Sp_insertTender_data]", conn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("@Tender_id", selectedTenderIds[i]);
+                            cmd.Parameters.AddWithValue("@user_id", user_id);
+                            cmd.Parameters.AddWithValue("@action", "assign");
+                            conn.Open();
+                            result += (int)cmd.ExecuteScalar();
+                            conn.Close();
+                        }
                     }
                 }
             }

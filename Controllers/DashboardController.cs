@@ -99,7 +99,7 @@ namespace TenderTracker.Controllers
                 if (string.IsNullOrEmpty(model.rowData.Remarks))
                 {
                     TempData["ErrorMessage"] = "Please enter remarks";
-                    return RedirectToAction("Dashboard");
+                    return RedirectToAction("ViewTender");
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace TenderTracker.Controllers
                 if (result == 1) // Success
                 {
                     var Remark_status = new TenderModel();
-                    Remark_status.rowData.remark_status = 1;
+                    //Remark_status.rowData.remark_status = 1;
                     TempData["SuccessMessage"] = "Successfully Added Remarks";
                     return RedirectToAction("Dashboard");
                 }
@@ -244,7 +244,7 @@ namespace TenderTracker.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApprovalTenderList([FromBody] List<TenderModel> model)
+        public IActionResult AssignTenderList([FromBody] List<TenderModel> model)
         {
             int result = 0;
             // Get selected tenders where IsSelected == true
@@ -257,12 +257,12 @@ namespace TenderTracker.Controllers
             //{
             //    result = _adminRepo.ApproveTender(tender.rowData.id); // Call your method for each selected tender
             //}
-            for (int i = 0; i < selectedTenderIds.Count; i++)
+            //for (int i = 0; i < selectedTenderIds.Count; i++)
             {
-                if (model[i].IsSelected)
+                //if (model[i].IsSelected)
                 {
-                    result = _adminRepo.ApproveTender(selectedTenderIds[i]); // Call your method for each selected tender
-                    if (result == 1)
+                    result = _adminRepo.ApproveTender(selectedTenderIds); // Call your method for each selected tender
+                    if (result >= 1)
                     {
                         TempData["SuccessMessage"] = "Successfully Assigned";
                         return RedirectToAction("ApprovalTenderList");
@@ -336,8 +336,43 @@ public IActionResult ApproveTenders(List<TenderModel> model)
                     var worksheet = package.Workbook.Worksheets[0]; // First sheet
                     int rowCount = worksheet.Dimension.Rows;
 
+                    // Define expected headers in the correct order
+                    string[] expectedHeaders = new[]
+                    {
+                        "empanelment_type", "tender", "department", "state", "city", "manpower",
+                        "emd", "tender_fee", "pre_bid_date", "tender_due_date", "filename"
+                    };
+
+                    // Validate headers from the first row
+                    for (int col = 1; col <= expectedHeaders.Length; col++)
+                    {
+                        string headerText = worksheet.Cells[1, col].Text?.Trim().ToLower();
+                        if (headerText != expectedHeaders[col - 1])
+                        {
+                            TempData["ErrorMessage"] = $"Invalid Excel format. Please upload a valid Excel.";
+                            return RedirectToAction("ViewExcel");
+                        }
+                    }
+
                     for (int row = 2; row <= rowCount; row++) // Skip header
                     {
+                        // Check for any empty column
+                        bool hasEmptyColumn = false;
+                        for (int col = 1; col <= 11; col++) // Adjust the number of columns as needed
+                        {
+                            if (string.IsNullOrWhiteSpace(worksheet.Cells[row, col].Text))
+                            {
+                                hasEmptyColumn = true;
+                                break;
+                            }
+                        }
+
+                        if (hasEmptyColumn)
+                        {
+                            TempData["ErrorMessage"] = "No column in the Excel sheet can be null. Please check the data and try again.";
+                            return RedirectToAction("ViewExcel"); // Redirect to the upload view
+                        }
+
                         var tenderData = new TenderData
                         {
                             Empanelment_type = worksheet.Cells[row, 1].Text,

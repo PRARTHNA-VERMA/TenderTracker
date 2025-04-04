@@ -46,7 +46,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Empanelment_type" class="fw-bold col-form-label">Empanelment Type</label>
-                                    <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label"></span>
+                                    <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label">*</span>
                                     <select asp-for="@Model.rowData.Empanelment_type" class="form-control">
                                         <option value="">Select Empanelment Type</option>
                                         <option value="GEM">GEM</option>
@@ -60,15 +60,15 @@
 
                             <div class="col-md-4">
                                 <label asp-for="@Model.rowData.Tender" class="fw-bold col-form-label">Tender No.</label>
-                                <span asp-validation-for="@Model.rowData.Tender" class="text-danger"></span>
-                                <input asp-for="@Model.rowData.Tender" type="text" class="form-control" />
+                                <span asp-validation-for="@Model.rowData.Tender" class="text-danger">*</span>
+                                <input placeholder="Tender No." asp-for="@Model.rowData.Tender" type="text" class="form-control" />
 
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Department" class="fw-bold col-form-label">Department</label>
-                                    <span asp-validation-for="@Model.rowData.Department" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Department" type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.rowData.Department" class="text-danger">*</span>
+                                    <input asp-for="@Model.rowData.Department" type="text" class="form-control" placeholder="Department name"/>
 
                                 </div>
                             </div>
@@ -85,7 +85,7 @@
                                 </div> *@
                                 <div class="form-group">
                                     <label for="StateDropdown" class="fw-bold col-form-label">State</label>
-                                    <span asp-validation-for="@Model.rowData.StateId" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.rowData.StateId" class="text-danger">*</span>
                                     <select id="StateDropdown" asp-for="@Model.rowData.StateId" class="form-control">
                                         <option value="">Select State</option>
                                         @foreach (var state in Model.rowData.states)
@@ -107,7 +107,7 @@
                                 </div> *@
                                 <div class="form-group">
                                     <label for="CityDropdown" class="fw-bold col-form-label">City</label>
-                                    <span asp-validation-for="@Model.rowData.CityId" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.rowData.CityId" class="text-danger">*</span>
                                     <select id="CityDropdown" name="rowdata.cityId" asp-for="@Model.rowData.CityId" class="form-control">
                                         <option value="">Select City</option>
                                         
@@ -120,7 +120,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Manpower" class="fw-bold col-form-label">Manpower/Project</label>
-                                    <span asp-validation-for="@Model.rowData.Manpower" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.rowData.Manpower" class="text-danger">*</span>
 
                                     <select asp-for="@Model.rowData.Manpower" class="form-control">
                                         <option value="">-- Select --</option>
@@ -137,8 +137,8 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.EMD" class="fw-bold col-form-label">EMD</label>
-                                    <span asp-validation-for="@Model.rowData.EMD" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.EMD" type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.rowData.EMD" class="text-danger">*</span>
+                                    <input asp-for="@Model.rowData.EMD" type="text" class="form-control" placeholder="EMD"/>
 
                                 </div>
                             </div>
@@ -146,8 +146,8 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Tender_fee" class="fw-bold col-form-label">Tender Fee</label>
-                                    <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Tender_fee" type="text" class="form-control" />
+                                    <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger">*</span>
+                                    <input asp-for="@Model.rowData.Tender_fee" type="text" class="form-control" placeholder="tender fee"/>
 
                                 </div>
                             </div>
@@ -155,8 +155,8 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label>
-                                    <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Pre_bid_date" type="date" class="form-control" />
+                                    <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger">*</span>
+                                    <input asp-for="@Model.rowData.Pre_bid_date" type="date" class="form-control" id="Date" />
 
                                 </div>
                             </div>
@@ -169,7 +169,7 @@
                                 <div class="col-md-8"> *@
                                 <div class="form-group">
                                     <label for="exampleInputFile" class="fw-bold col-form-label">Choose file</label>
-                                    <span asp-validation-for="@Model.rowData.tender_file" class="text-danger"></span>
+                                    <span asp-validation-for="@Model.rowData.tender_file" class="text-danger">*</span>
                                     <input type="file" asp-for="@Model.rowData.tender_file" class="custom-file-input mt-3" id="exampleInputFile" accept=".pdf">
                                 </div>
                                @*  </div> *@
@@ -187,8 +187,8 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label>
-                                    <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Tender_due_date" type="date" class="form-control" />
+                                    <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger">*</span>
+                                    <input asp-for="@Model.rowData.Tender_due_date" type="date" class="form-control" id="TDueDate" />
 
                                 </div>
                             </div>
@@ -286,6 +286,26 @@
                 });
             }
         });
+
+        // Year validation for Pre-Bid Date
+        $('form').change(function () {
+            const year = new Date($('#Date').val()).getFullYear();
+            if (year.toString().length > 4) {
+                alert("Year must be a 4-digit number.");
+                return false;
+            }
+            return true;
+        });
+
+        // Year validation for Tender Due Date
+        $('form').change(function () {
+            const year = new Date($('#TDueDate').val()).getFullYear();
+            if (year.toString().length > 4) {
+                alert("Year must be a 4-digit number.");
+                return false;
+            }
+            return true;
+        });
     });
 </script>
 <script>
@@ -296,7 +316,7 @@
 
         if (fileName) {
             if (!allowedExtensions.exec(fileName)) {
-                alert("Invalid file type. Please upload only PDF files.");
+                    alert("Only PDF format is allowed in this field.");
                 fileInput.value = ""; // Clear the file input
                 return;
             }
