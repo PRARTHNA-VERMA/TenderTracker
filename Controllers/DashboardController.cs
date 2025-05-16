@@ -209,12 +209,14 @@ namespace TenderTracker.Controllers
                 }
                 if (result == -1) 
                 {
+                    model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
                     TempData["ErrorMessage"] = "Tender No. already added";
-                    return View();
+                    return View(model);
                 }
             }
             model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
 
+            TempData["ErrorMessage1"] = "NOTE : All Fields are Mandatory";
             return View(model);
         }
 
@@ -406,6 +408,10 @@ public IActionResult ApproveTenders(List<TenderModel> model)
                 if (rowsAffected > 0)
                 {
                     TempData["SuccessMessage"] = "Excel data uploaded and saved successfully!";
+                }
+                if(rowsAffected == -1)
+                {
+                    TempData["ErrorMessage"] = "Tender No. already added";
                 }
                 else
                 {

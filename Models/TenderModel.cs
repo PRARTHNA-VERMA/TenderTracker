@@ -49,6 +49,7 @@ namespace TenderTracker.Models
         public string? Tender { get; set; }
 
         [Required(ErrorMessage = "*")]
+        [RegularExpression(@"^[a-zA-Z_]+$", ErrorMessage = "Invalid Department Format")]
         public string? Department { get; set; }
 
         [Required(ErrorMessage = "*")]
@@ -68,7 +69,7 @@ namespace TenderTracker.Models
         public string? Manpower { get; set; }
 
         [Required(ErrorMessage = "*")]
-        [RegularExpression(@"^(?!0\d)\d+(\.\d+)?$", ErrorMessage = "Invalid EMD Format")]
+        [RegularExpression(@"^[0-9]\d*$", ErrorMessage = "Invalid EMD Format")]
         public string? EMD { get; set; }
 
         [Required(ErrorMessage = "*")]

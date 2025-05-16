@@ -110,8 +110,10 @@
                                             <td>@item.rowData.Manpower</td>
                                             <td>@item.rowData.EMD</td>
                                             <td>@item.rowData.Tender_fee</td>
-                                            <td>@item.rowData.Pre_bid_date</td>
-                                            <td>@item.rowData.Tender_due_date</td>
+                                            @*<td>@item.rowData.Pre_bid_date</td>
+                                            <td>@item.rowData.Tender_due_date</td>*@
+                                            <td>@(Convert.ToDateTime(item.rowData.Pre_bid_date).ToString("dd-MM-yyyy"))</td>
+                                            <td>@(Convert.ToDateTime(item.rowData.Tender_due_date).ToString("dd-MM-yyyy"))</td>
                                             @*<td>@item.rowData.Remarks</td>*@
                                             <td>
                                                 @(string.IsNullOrEmpty(item.rowData.Name) ? "N/A" : item.rowData.Name)

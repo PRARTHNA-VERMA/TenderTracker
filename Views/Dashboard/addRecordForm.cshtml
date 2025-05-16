@@ -24,12 +24,7 @@
                     @TempData["SuccessMessage"]
                 </div>
             }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-success offset-md-1">
-                    @TempData["ErrorMessage"]
-                </div>
-            }
+             
             <form asp-action="addRecordForm" asp-controller="Dashboard" method="post" enctype="multipart/form-data">
                 <div class="card card-default mt-5">
                     <div class="card-header  bg-primary">
@@ -41,12 +36,25 @@
                             alert('@TempData["ErrorMessage"]');
                         </script>
                     }
+                      
+                    @if (TempData["ErrorMessage1"] != null)
+                    {
+                        <div class="alert alert-danger mb-3">
+                            @TempData["ErrorMessage1"]
+                        </div>
+                    }
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Empanelment_type" class="fw-bold col-form-label">Empanelment Type</label>
-                                    <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Empanelment_type)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Empanelment_type"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <select asp-for="@Model.rowData.Empanelment_type" class="form-control">
                                         <option value="">Select Empanelment Type</option>
                                         <option value="GEM">GEM</option>
@@ -60,14 +68,24 @@
 
                             <div class="col-md-4">
                                 <label asp-for="@Model.rowData.Tender" class="fw-bold col-form-label">Tender No.</label>
-                                <span asp-validation-for="@Model.rowData.Tender" class="text-danger">*</span>
+                                @* <span asp-validation-for="@Model.rowData.Tender" class="text-danger">*</span> *@
+                                <span class="text-danger">
+                                    @(string.IsNullOrEmpty(Model.rowData?.Tender)
+                                        ? "*"
+                                        : ViewData.ModelState["rowData.Tender"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                </span>
                                 <input placeholder="Tender No." asp-for="@Model.rowData.Tender" type="text" class="form-control" />
 
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Department" class="fw-bold col-form-label">Department</label>
-                                    <span asp-validation-for="@Model.rowData.Department" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.Department" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Department)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Department"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <input asp-for="@Model.rowData.Department" type="text" class="form-control" placeholder="Department name"/>
 
                                 </div>
@@ -85,7 +103,12 @@
                                 </div> *@
                                 <div class="form-group">
                                     <label for="StateDropdown" class="fw-bold col-form-label">State</label>
-                                    <span asp-validation-for="@Model.rowData.StateId" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.StateId" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @((Model.rowData?.StateId == null || Model.rowData.StateId == 0)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.StateId"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <select id="StateDropdown" asp-for="@Model.rowData.StateId" class="form-control">
                                         <option value="">Select State</option>
                                         @foreach (var state in Model.rowData.states)
@@ -107,7 +130,12 @@
                                 </div> *@
                                 <div class="form-group">
                                     <label for="CityDropdown" class="fw-bold col-form-label">City</label>
-                                    <span asp-validation-for="@Model.rowData.CityId" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.CityId" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @((Model.rowData?.CityId == null || Model.rowData.CityId == 0)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.CityId"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <select id="CityDropdown" name="rowdata.cityId" asp-for="@Model.rowData.CityId" class="form-control">
                                         <option value="">Select City</option>
                                         
@@ -120,8 +148,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Manpower" class="fw-bold col-form-label">Manpower/Project</label>
-                                    <span asp-validation-for="@Model.rowData.Manpower" class="text-danger">*</span>
-
+                                    @* <span asp-validation-for="@Model.rowData.Manpower" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Manpower)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Manpower"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <select asp-for="@Model.rowData.Manpower" class="form-control">
                                         <option value="">-- Select --</option>
                                         <option value="Manpower">Manpower</option>
@@ -137,7 +169,13 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.EMD" class="fw-bold col-form-label">EMD</label>
-                                    <span asp-validation-for="@Model.rowData.EMD" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.EMD" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.EMD)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.EMD"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
+
                                     <input asp-for="@Model.rowData.EMD" type="text" class="form-control" placeholder="EMD"/>
 
                                 </div>
@@ -146,7 +184,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Tender_fee" class="fw-bold col-form-label">Tender Fee</label>
-                                    <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Tender_fee)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Tender_fee"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <input asp-for="@Model.rowData.Tender_fee" type="text" class="form-control" placeholder="tender fee"/>
 
                                 </div>
@@ -155,7 +198,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label>
-                                    <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Pre_bid_date)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Pre_bid_date"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <input asp-for="@Model.rowData.Pre_bid_date" type="date" class="form-control" id="Date" />
 
                                 </div>
@@ -169,7 +217,12 @@
                                 <div class="col-md-8"> *@
                                 <div class="form-group">
                                     <label for="exampleInputFile" class="fw-bold col-form-label">Choose file</label>
-                                    <span asp-validation-for="@Model.rowData.tender_file" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.tender_file" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(Model.rowData?.tender_file == null
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.tender_file"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <input type="file" asp-for="@Model.rowData.tender_file" class="custom-file-input mt-3" id="exampleInputFile" accept=".pdf">
                                 </div>
                                @*  </div> *@
@@ -187,7 +240,12 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label>
-                                    <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger">*</span>
+                                    @* <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger">*</span> *@
+                                    <span class="text-danger">
+                                        @(string.IsNullOrEmpty(Model.rowData?.Tender_due_date)
+                                            ? "*"
+                                            : ViewData.ModelState["rowData.Tender_due_date"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span>
                                     <input asp-for="@Model.rowData.Tender_due_date" type="date" class="form-control" id="TDueDate" />
 
                                 </div>
@@ -210,7 +268,8 @@
                         <div class="text-center m-3">
                             <button class="btn btn-primary">SUBMIT</button>
                         </div>
-                        @* </div> *@
+                    </div>
+                 </div>
 
                         @* @if (TempData["ErrorMessage"] != null)
                 {
@@ -254,6 +313,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
+
+        // Reset StateDropdown on page load
+        $('#StateDropdown').val(''); // Clear selected option
+
         // When the state dropdown changes
         $('#StateDropdown').change(function () {
             var stateId = $(this).val();

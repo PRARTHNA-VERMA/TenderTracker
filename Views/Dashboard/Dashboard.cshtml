@@ -76,7 +76,8 @@
                                         <td>@item.rowData.Department</td>
                                         <td>@item.rowData.State</td>
                                         <td>@item.rowData.City</td>
-                                        <td>@item.rowData.Tender_due_date</td>
+                                        @*<td>@item.rowData.Tender_due_date</td>*@
+                                        <td>@(Convert.ToDateTime(item.rowData.Tender_due_date).ToString("dd-MM-yyyy"))</td>
                                         <td>
                                             @(string.IsNullOrEmpty(item.rowData.Name) ? "N/A" : item.rowData.Name)
                                         </td>

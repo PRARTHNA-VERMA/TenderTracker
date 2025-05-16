@@ -6,8 +6,8 @@ namespace TenderTracker.Models
     {
         [Required(ErrorMessage = "Please enter a valid email address")]
         [DataType(DataType.EmailAddress)]
-        [RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", ErrorMessage = "Invalid email address")]
-
+        //[RegularExpression(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.com$", ErrorMessage = "Invalid email address.")]
+        [RegularExpression(@"^(?=.{1,50}$)(?!.*\s)[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.com$", ErrorMessage = "Invalid email address.")]
         public string? Email { get; set; } = "null";
 
 
