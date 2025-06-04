@@ -13,6 +13,8 @@ namespace TenderTracker.Models
         public int tender_id { get; set; }
 
         public List<TenderModel> Tendermodel { get; set; }
+
+        public City? Citymodel { get; set; }
     }
     public class ExcelViewUpload
     {
@@ -41,48 +43,48 @@ namespace TenderTracker.Models
     {
         public int id { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required(ErrorMessage = "Empanelment Type is required.")]
         public string? Empanelment_type { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [RegularExpression(@"^[0-9]\d*$", ErrorMessage = "Invalid Tender No. Format")]
+        [Required(ErrorMessage = "Tender No. is required.")]
+        [RegularExpression(@"^[0-9]+$", ErrorMessage = "Invalid Tender No. Format")]
         public string? Tender { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        [RegularExpression(@"^[a-zA-Z_]+$", ErrorMessage = "Invalid Department Format")]
+        [Required]
+        [RegularExpression(@"^(?!\s*$)(?:_?[a-zA-Z]+(?:[_ ][a-zA-Z]+)*)$", ErrorMessage = "Invalid Department Format")]
         public string? Department { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public int StateId { get; set; }
+        [Required(ErrorMessage = "State is required.")]
+        public int? StateId { get; set; }
 
-        [Required(ErrorMessage = "*")]
-        public int CityId { get; set; }
+        [Required(ErrorMessage = "City is required.")]
+        public int? CityId { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public string? State { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public string? City { get; set; }
         public string? tender_remark { get; set; }  
 
-        [Required(ErrorMessage = "*")]  
+        [Required]  
         public string? Manpower { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         [RegularExpression(@"^[0-9]\d*$", ErrorMessage = "Invalid EMD Format")]
         public string? EMD { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         [RegularExpression(@"^(?!0\d)\d+(\.\d+)?$", ErrorMessage = "Invalid Tender Fee Format")]
         public string? Tender_fee { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public string? Pre_bid_date { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public string? Tender_due_date { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public string? Remarks { get; set; }
 
         public int? remark_status { get; set; } = 0;
@@ -95,10 +97,11 @@ namespace TenderTracker.Models
 
         public string? Name { get; set; }
 
-        [Required(ErrorMessage = "*")]
+        [Required]
         public IFormFile? tender_file { get; set; }
         public string?tender_file_name { get; set; }
-       
+        //public string? Base64Pdf { get; set; } // Optional: for re-rendering the PDF
+
         public List<State> states { get; set; }
 
         public List<City> cities { get; set; }
@@ -111,9 +114,14 @@ namespace TenderTracker.Models
         public string StateName { get; set; }
     }
     public class City
-    {
+    {        
         public int CityId { get; set; }
-        public string CityName { get; set; }
-        public int StateId { get; set; }
+
+        [Required(ErrorMessage = "City is required.")]
+        [RegularExpression(@"^[A-Za-z]+(?: [A-Za-z]+)*$", ErrorMessage = "Invalid City Format.")]
+        public string? CityName { get; set; }
+
+        [Required(ErrorMessage = "State is required.")]
+        public int? StateId { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using TenderTracker.Filter;
 using System.ComponentModel;
 using System.Globalization;
 using OfficeOpenXml;
+using System.Data;
 
 namespace TenderTracker.Controllers
 {
@@ -98,7 +99,7 @@ namespace TenderTracker.Controllers
             {
                 if (string.IsNullOrEmpty(model.rowData.Remarks))
                 {
-                    TempData["ErrorMessage"] = "Please enter remarks";
+                    TempData["ErrorMessage"] = "Please enter the remarks";
                     return RedirectToAction("ViewTender");
                 }
                 else
@@ -117,7 +118,7 @@ namespace TenderTracker.Controllers
                 {
                     var Remark_status = new TenderModel();
                     //Remark_status.rowData.remark_status = 1;
-                    TempData["SuccessMessage"] = "Successfully Added Remarks";
+                    TempData["SuccessMessage"] = "You have Successfully entered the Remarks.";
                     return RedirectToAction("Dashboard");
                 }
                 if (result == -1) 
@@ -164,6 +165,79 @@ namespace TenderTracker.Controllers
             return Json(cities);
         }
 
+        public IActionResult GetCity(TenderModel model)
+        {
+            var dt = _adminRepo.GetCity(model);
+            return View(dt);
+        }
+
+        public IActionResult DeleteCity(int id)
+        {
+
+            DataTable result = _adminRepo.DeleteCity(id);
+            TempData["Success"] = " City Deleted Successfully";
+            return RedirectToAction("GetCity");
+
+        }
+
+        [HttpGet]
+        public IActionResult AddCity() 
+        {
+            var model = new TenderModel
+            {
+                //states = _adminRepo.GetStates()
+                rowData = new TenderModelData()
+                {
+                    states = _adminRepo.GetStates() // Ensure this method returns a valid list, not null
+                }
+            };
+            return View(model);
+        }
+        [HttpPost]
+        public IActionResult AddCity(TenderModel model)
+        {
+            ModelState.Remove("rowdata.states");
+            ModelState.Remove("rowdata.cities");
+            ModelState.Remove("rowdata.state");
+            ModelState.Remove("rowdata.city");
+            ModelState.Remove("state");
+            ModelState.Remove("city");
+            ModelState.Remove("tender_id");
+            ModelState.Remove("IsSelected");
+            ModelState.Remove("Tendermodel");
+            ModelState.Remove("rowData");
+            if (ModelState.IsValid)
+            {
+                int result = _adminRepo.AddCity(model);
+                if (result == 1) // Success
+                {
+                    TempData["SuccessMessage"] = "You have successfully added the city.";
+                    return RedirectToAction("Dashboard");
+                }
+                if (result == -1)
+                {
+                    if (model.rowData == null)
+                    {
+                        model.rowData = new TenderModelData(); // Assuming RowData is the type of rowData
+                    }
+
+                    model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
+                    model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId ?? 0);
+                    TempData["ErrorMessage"] = "City already exists";
+                    return View(model);
+                }
+            }
+            if (model.rowData == null)
+            {
+                model.rowData = new TenderModelData(); // Assuming RowData is the type of rowData
+            }
+            model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
+            //model.rowData.cities = _adminRepo.GetCitiesByState(model.rowData.StateId ?? 0);
+            model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId ?? 0);
+            //model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId ?? 0);
+            return View(model);
+        }
+
         [HttpGet]
         public IActionResult addRecordForm()
         {
@@ -185,6 +259,11 @@ namespace TenderTracker.Controllers
         [HttpPost]
         public IActionResult addRecordForm(TenderModel model)
         {
+            model.rowData.states = _adminRepo.GetStates();
+            model.rowData.cities = _adminRepo.GetCitiesByState(model.rowData.StateId??0);
+            model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId??0);
+            model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId ?? 0);
+
             ModelState.Remove("rowdata.states");
             ModelState.Remove("rowdata.cities");
             ModelState.Remove("rowdata.state");
@@ -195,16 +274,19 @@ namespace TenderTracker.Controllers
             ModelState.Remove("IsSelected");
             ModelState.Remove("Tendermodel");
             ModelState.Remove("rowdata.Remarks");
+            ModelState.Remove("rowData.Citymodel");
             if (ModelState.IsValid)
             {
-                model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId);
-                model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId);
+                model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId ?? 0);
+                model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId ?? 0);
+
+                // If PDF file is present, convert to base64 for preview                
 
                 int result = _adminRepo.insertForm_data(model);
 
                 if (result == 1) // Success
                 {
-                    TempData["SuccessMessage"] = "Successfully Inserted";
+                    TempData["SuccessMessage"] = "You have successfully submitted the tender.";
                     return RedirectToAction("Dashboard");
                 }
                 if (result == -1) 
@@ -214,9 +296,25 @@ namespace TenderTracker.Controllers
                     return View(model);
                 }
             }
+            //if (model.rowData.tender_file != null && model.rowData.tender_file.Length > 0)
+            //{
+            //    using (var ms = new MemoryStream())
+            //    {
+            //        model.rowData.tender_file.CopyToAsync(ms);
+            //        var fileName = Path.GetFileName(model.rowData.tender_file?.FileName);
+            //        var filenamewithoutextension = Path.GetFileNameWithoutExtension(fileName);
+            //        var extension = Path.GetExtension(fileName);
+            //        var finalfilename = filenamewithoutextension + extension;
+            //        model.rowData.Base64Pdf = finalfilename;
+            //        //model.rowData.Base64Pdf = Convert.ToBase64String(ms.ToArray());
+            //    }
+            //}
             model.rowData.states = _adminRepo.GetStates(); // Fetch states from the repository
+            model.rowData.cities = _adminRepo.GetCitiesByState(model.rowData.StateId ?? 0);
+            model.rowData.State = _adminRepo.GetStateName(model.rowData.StateId ?? 0);
+            model.rowData.City = _adminRepo.GetCityByID(model.rowData.CityId ?? 0);
 
-            TempData["ErrorMessage1"] = "NOTE : All Fields are Mandatory";
+            //TempData["ErrorMessage1"] = "NOTE : All Fields are Mandatory";
             return View(model);
         }
 
@@ -266,7 +364,7 @@ namespace TenderTracker.Controllers
                     result = _adminRepo.ApproveTender(selectedTenderIds); // Call your method for each selected tender
                     if (result >= 1)
                     {
-                        TempData["SuccessMessage"] = "Successfully Assigned";
+                        TempData["SuccessMessage"] = "You have Successfully Assigned the Tender.";
                         return RedirectToAction("ApprovalTenderList");
                     }
                     if (result == -1)
@@ -324,6 +422,7 @@ public IActionResult ApproveTenders(List<TenderModel> model)
             if (model.ExcelUpload == null || model.ExcelUpload.Length == 0)
             {
                 ViewBag.ErrorMessage = "Please upload a valid Excel file.";
+                TempData["ErrorMessage"] = "Please upload a valid Excel file.";
                 return View(model);
             }
 
@@ -411,7 +510,7 @@ public IActionResult ApproveTenders(List<TenderModel> model)
                 }
                 if(rowsAffected == -1)
                 {
-                    TempData["ErrorMessage"] = "Tender No. already added";
+                    TempData["ErrorMessage"] = " The Tender Number you entered already exists. Kindly provide a new one.";
                 }
                 else
                 {

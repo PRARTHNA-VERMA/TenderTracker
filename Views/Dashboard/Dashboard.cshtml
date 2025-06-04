@@ -26,7 +26,8 @@
         alert('@TempData["ErrorMessage"]');
     </script>
 }
-
+<title>@ViewData["Title"] - TenderTracker</title>
+<body>
 <div class="content-wrapper">
     <section>
         <div>
@@ -51,7 +52,7 @@
                                 <th class="bg-primary text-light">Department</th>
                                 <th class="bg-primary text-light">State</th>
                                 <th class="bg-primary text-light">City</th>
-                                <th class="bg-primary text-light">Tender Due Date</th>
+                                <th class="bg-primary text-light" style="min-width: 80px;">Tender Due Date</th>
                                 <th class="bg-primary text-light">Assigned To</th>
                                 <th class="bg-primary text-light">Submitted Date</th>
                                 @if (user_type != "3")
@@ -101,6 +102,7 @@
         </div>
     </section>
 </div>
+</body>
 
 <!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">

@@ -39,6 +39,21 @@
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
 
+                    <!-- CAPTCHA image -->
+                    <div class="mb-3">
+                        <label class="form-label">Enter CAPTCHA</label>
+                        <div style="gap: 10px; display: flex; align-items: center;">
+                            <img src="@Url.Action("GenerateCaptcha", "Login")" alt="CAPTCHA" class="me-2" id="captchaImage" style="height: 40px; width: auto; max-width: none; margin-right: 10px;" />
+                            <a href="#" onclick="refreshCaptcha(); return false;" style="font-size: 1rem;">🔄</a>
+                        </div>
+                    </div>
+
+                    <!-- CAPTCHA input -->
+                    <div class="mb-3">
+                        <input type="text" name="CaptchaCode" class="form-control" placeholder="Enter the text shown above" required />
+                        <span class="text-danger">@ViewData["CaptchaError"]</span>
+                    </div>
+
                     <div class="m-3 text-center">
                         <input type="submit" value="Submit" class="btn btn-outline-primary" />
                     </div>
@@ -57,7 +72,11 @@
 
     </div>
 
-
+    <script>
+        function refreshCaptcha() {
+            $('#captchaImage').attr('src', '@Url.Action("GenerateCaptcha", "Login")' + '?t=' + new Date().getTime());
+        }
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

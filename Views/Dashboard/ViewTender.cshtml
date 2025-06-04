@@ -154,7 +154,7 @@
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label>
                                     <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Pre_bid_date" type="date" class="form-control" disabled aria-disabled="true" />
+                                    <input asp-for="@Model.rowData.Pre_bid_date" type="text" class="form-control" value="@(DateTime.TryParse(Model.rowData.Pre_bid_date, out var dt) ? dt.ToString("dd-MM-yyyy") : "")" disabled aria-disabled="true" />
 
                                 </div>
                             </div>
@@ -200,7 +200,7 @@
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label>
                                     <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger"></span>
-                                    <input asp-for="@Model.rowData.Tender_due_date" type="date" class="form-control" disabled aria-disabled="true" />
+                                    <input asp-for="@Model.rowData.Tender_due_date" type="text" class="form-control" value="@(DateTime.TryParse(Model.rowData.Tender_due_date, out var date) ? date.ToString("dd-MM-yyyy") : "")" disabled aria-disabled="true" />
 
                                 </div>
                             </div>
@@ -226,7 +226,7 @@
                             }
                             else if (Model.rowData.Name == Name) // Check if Name matches ViewBag.Name
                             {
-                                <button class="btn btn-primary">SUBMIT</button>
+                                <button class="btn btn-primary" type="submit">SUBMIT</button>
                             }
                             else
                             {
@@ -313,6 +313,16 @@
                         alert('Error loading cities: ' + err);
                     }
                 });
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            var confirmed = confirm("Are you sure you want to submit?");
+            if (!confirmed) {
+                e.preventDefault(); // Cancel the form submission
             }
         });
     });

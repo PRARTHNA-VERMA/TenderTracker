@@ -108,6 +108,59 @@ namespace TenderTracker.Repository
             return cityName; // Return the city name
         }
 
+        public DataTable GetCity(TenderModel model)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[GetCity]", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@action", "getcity");
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    sda.Fill(dt);
+                }
+            }
+            return dt;
+        }
+
+        public DataTable DeleteCity(int id)
+        {
+
+            DataTable dt = new DataTable();
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[GetCity]", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.Parameters.AddWithValue("@action", "deletecity");
+                    SqlDataAdapter sda = new SqlDataAdapter(cmd);
+                    sda.Fill(dt);
+                }
+            }
+            return dt;
+        }
+
+        public int AddCity(TenderModel model)
+        {
+            int result = 0;
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[dbo].[GetCity]", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@City", model.Citymodel.CityName);
+                    cmd.Parameters.AddWithValue("@StateId", model.Citymodel.StateId);
+                    cmd.Parameters.AddWithValue("@action", "addcity");
+                    conn.Open();
+                    result = (int)cmd.ExecuteScalar();
+                    conn.Close();
+                }
+            }
+            return result; // Return the result of the operation
+        }
+
         public int insertForm_data(TenderModel model)
         {
             var Name = _httpContextAccessor.HttpContext.Session.GetString("Name");

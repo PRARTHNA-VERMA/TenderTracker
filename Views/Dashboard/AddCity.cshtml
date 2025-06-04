@@ -1,0 +1,231 @@
+﻿@using TenderTracker.Models
+
+
+@{
+
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+@model TenderModel 
+
+<head>
+    @* <link href="~/dist/css/min.css" rel="stylesheet" /> *@
+
+</head>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <!-- Main content -->
+    <section class="content">
+        <div class="container-fluid">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                    <div class="alert alert-success offset-md-1">
+                    @TempData["SuccessMessage"]
+                    </div>
+            }
+
+            <form asp-action="AddCity" asp-controller="Dashboard" method="post" >
+                <div class="card card-default mt-5">
+                    <div class="card-header  bg-primary">
+                        <h3 class="card-title text-center fs-3 w-100">Add City</h3>
+                    </div>
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                            <script>
+                                alert('@TempData["ErrorMessage"]');
+                            </script>
+                    }
+
+                    @if (TempData["ErrorMessage1"] != null)
+                    {
+                            <script>
+                                alert('@TempData["ErrorMessage1"]');
+                            </script>
+                    }
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="StateDropdown" class="fw-bold col-form-label">State</label><br />
+                                    <span asp-validation-for="@Model.Citymodel.StateId" class="text-danger"></span> 
+                                    @* <span class="text-danger">
+                                        @((Model.rowData?.StateId == null || Model.rowData.StateId == 0)
+                                            ? ""
+                                            : ViewData.ModelState["rowData.StateId"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span> *@
+                                    <select id="StateDropdown" asp-for="@Model.Citymodel.StateId" class="form-control">
+                                        <option value="">Select State</option>
+                                        @foreach (var state in Model.rowData.states)
+                                        {
+                                                <option value="@state.StateId">@state.StateName</option>
+                                        }
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                 <div class="form-group">
+                                    <label asp-for="@Model.Citymodel.CityName" class="fw-bold col-form-label">City</label><br />
+                                    <span asp-validation-for="@Model.Citymodel.CityName" class="text-danger"></span>
+                                    <input asp-for="@Model.Citymodel.CityName" type="text" class="form-control" />
+
+                                </div>
+                                @* <div class="form-group">
+                                    <label for="CityDropdown" class="fw-bold col-form-label">City</label><br />
+                                    <span asp-validation-for="@Model.rowData.CityId" class="text-danger"></span> 
+                                    @* <span class="text-danger">
+                                        @((Model.rowData?.CityId == null || Model.rowData.CityId == 0)
+                                            ? ""
+                                            : ViewData.ModelState["rowData.CityId"]?.Errors.FirstOrDefault()?.ErrorMessage)
+                                    </span> *
+                                    <select id="CityDropdown" name="rowdata.cityId" asp-for="@Model.rowData.CityId" class="form-control" data-selected="@Model.rowData.CityId">
+                                        <option value="">Select City</option>
+
+                                        <!-- Cities will be populated dynamically via AJAX -->
+                                    </select>
+
+                                </div> *@
+                            </div>
+                        </div>                        
+                        <div class="row">
+                        </div>
+                        <div class="text-center m-3">
+                            <button class="btn btn-primary" type="submit">SUBMIT</button>
+                        </div>
+                    </div>
+                 </div>
+
+                @* @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger offset-md-1">
+                        @TempData["ErrorMessage"]
+                    </div>
+                } *@
+
+
+            </form>
+        </div>
+    </section>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script src="~/js/site.js"></script>
+<a href="~/lib/jquery/dist/jquery.min.map"></a>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>@* 
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        function loadCities(stateId, selectedCityId = null) {
+            $('#CityDropdown').empty();
+
+            if (stateId !== '') {
+                $.ajax({
+                    url: '@Url.Action("GetCities", "Dashboard")',
+                    type: 'GET',
+                    data: { stateId: stateId },
+                    success: function (cities) {
+                        if (cities && cities.length > 0) {
+                            $('#CityDropdown').append('<option value="">Select City</option>');
+                            $.each(cities, function (i, city) {
+                                $('#CityDropdown').append($('<option>', {
+                                    value: city.cityId,
+                                    text: city.cityName,
+                                    selected: city.cityId == selectedCityId
+                                }));
+                            });
+                        } else {
+                            $('#CityDropdown').append('<option value="">No cities available</option>');
+                        }
+                    },
+                    error: function (err) {
+                        alert('Error loading cities: ' + err.responseText);
+                    }
+                });
+            } else {
+                $('#CityDropdown').append('<option value="">Select a state first</option>');
+            }
+        }
+
+        // Trigger on state dropdown change
+        $('#StateDropdown').change(function () {
+            var stateId = $(this).val();
+            loadCities(stateId); // No selected city on manual change
+        });
+
+        // Trigger on page load (in case of form reload)
+        var preselectedStateId = $('#StateDropdown').val();
+        var preselectedCityId = $('#CityDropdown').data('selected'); // 👈 We'll set this via Razor
+
+        if (preselectedStateId !== '') {
+            loadCities(preselectedStateId, preselectedCityId);
+        } *@
+
+        @* // function loadCities(stateId) {
+        //     $('#CityDropdown').empty();
+
+        //     if (stateId !== '') {
+        //         $.ajax({
+        //             url: '@Url.Action("GetCities", "Dashboard")',
+        //             type: 'GET',
+        //             data: { stateId: stateId },
+        //             success: function (cities) {
+        //                 if (cities != '' && cities.length > 0) {
+        //                     $('#CityDropdown').append('<option value="">Select City</option>');
+        //                     $.each(cities, function (i, city) {
+        //                         $('#CityDropdown').append($('<option>', {
+        //                             value: city.cityId,
+        //                             text: city.cityName
+        //                         }));
+        //                     });
+        //                 } else {
+        //                     $('#CityDropdown').append('<option value="">No cities available</option>');
+        //                 }
+        //             },
+        //             error: function (err) {
+        //                 alert('Error loading cities: ' + err.responseText);
+        //             }
+        //         });
+        //     } else {
+        //         $('#CityDropdown').append('<option value="">Select a state first</option>');
+        //     }
+        // }
+
+        // // 🔹 Trigger on state change
+        // $('#StateDropdown').change(function () {
+        //     var stateId = $(this).val();
+        //     loadCities(stateId);
+        // });
+
+        // // 🔹 Also trigger on page load if a state is already selected
+        // var preselectedStateId = $('#StateDropdown').val();
+        // if (preselectedStateId !== '') {
+        //     loadCities(preselectedStateId);
+        // }
+        // Reset StateDropdown on page load
+        //$('#StateDropdown').val(''); // Clear selected option 
+
+    });
+</script>*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('form').on('submit', function (e) {
+            var confirmed = confirm("Are you sure you want to submit?");
+            if (!confirmed) {
+                e.preventDefault(); // Cancel the form submission
+            }
+        });
+    });
+</script>
+
+
