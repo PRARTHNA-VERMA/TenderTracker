@@ -48,7 +48,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Empanelment_type" class="fw-bold col-form-label">Empanelment Type</label><br />
+                                    <label asp-for="@Model.rowData.Empanelment_type" class="fw-bold col-form-label">Empanelment Type</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.Empanelment_type" class="text-danger col-form-label"></span> 
                                    @*  <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Empanelment_type)
@@ -67,7 +68,8 @@
                             </div>
 
                             <div class="col-md-4">
-                                <label asp-for="@Model.rowData.Tender" class="fw-bold col-form-label">Tender No.</label><br />
+                                <label asp-for="@Model.rowData.Tender" class="fw-bold col-form-label">Tender No.</label>
+                                <span class="text-danger">*</span><br />
                                 <span asp-validation-for="@Model.rowData.Tender" class="text-danger"></span>
                                 @* <span class="text-danger">
                                     @(string.IsNullOrEmpty(Model.rowData?.Tender)
@@ -79,7 +81,8 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Department" class="fw-bold col-form-label">Department</label><br />
+                                    <label asp-for="@Model.rowData.Department" class="fw-bold col-form-label">Department</label>
+                                    <span class="text-danger">*</span><br />
                                      <span asp-validation-for="@Model.rowData.Department" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Department)
@@ -102,7 +105,8 @@
 
                                 </div> *@
                                 <div class="form-group">
-                                    <label for="StateDropdown" class="fw-bold col-form-label">State</label><br />
+                                    <label for="StateDropdown" class="fw-bold col-form-label">State</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.StateId" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @((Model.rowData?.StateId == null || Model.rowData.StateId == 0)
@@ -129,7 +133,8 @@
 
                                 </div> *@
                                 <div class="form-group">
-                                    <label for="CityDropdown" class="fw-bold col-form-label">City</label><br />
+                                    <label for="CityDropdown" class="fw-bold col-form-label">City</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.CityId" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @((Model.rowData?.CityId == null || Model.rowData.CityId == 0)
@@ -147,7 +152,8 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Manpower" class="fw-bold col-form-label">Manpower/Project</label><br />
+                                    <label asp-for="@Model.rowData.Manpower" class="fw-bold col-form-label">Manpower/Project</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.Manpower" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Manpower)
@@ -168,7 +174,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.EMD" class="fw-bold col-form-label">EMD</label><br />
+                                    <label asp-for="@Model.rowData.EMD" class="fw-bold col-form-label">EMD</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.EMD" class="text-danger"></span>
                                     @* <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.EMD)
@@ -183,7 +190,8 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Tender_fee" class="fw-bold col-form-label">Tender Fee</label><br />
+                                    <label asp-for="@Model.rowData.Tender_fee" class="fw-bold col-form-label">Tender Fee</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.Tender_fee" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Tender_fee)
@@ -197,7 +205,8 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label><br />
+                                    <label asp-for="@Model.rowData.Pre_bid_date" class="fw-bold col-form-label">Pre-Bid Date</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.Pre_bid_date" class="text-danger"></span> 
                                    @*  <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Pre_bid_date)
@@ -216,7 +225,8 @@
                             <div class="col-md-4">@* 
                                 <div class="col-md-8"> *@
                                 <div class="form-group">
-                                    <label for="exampleInputFile" class="fw-bold col-form-label">Choose file</label><br />
+                                    <label for="exampleInputFile" class="fw-bold col-form-label">Choose file</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.tender_file" class="text-danger"></span>
                                     @* <span class="text-danger">
                                         @(Model.rowData?.tender_file == null
@@ -248,7 +258,8 @@
 
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label><br />
+                                    <label asp-for="@Model.rowData.Tender_due_date" class="fw-bold col-form-label">Tender Due Date</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.rowData.Tender_due_date" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @(string.IsNullOrEmpty(Model.rowData?.Tender_due_date)

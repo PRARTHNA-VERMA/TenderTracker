@@ -18,5 +18,8 @@ namespace TenderTracker.Models
 
         [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{5,}$", ErrorMessage = "Please enter a valid password.")]
         public string? Password { get; set; } = "null";
+
+        [Required(ErrorMessage = "CAPTCHA is required.")]
+        public string? CaptchaCode { get; set; } = "null";
     }
 }

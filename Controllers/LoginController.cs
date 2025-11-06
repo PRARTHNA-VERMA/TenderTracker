@@ -21,7 +21,7 @@ namespace TenderTracker.Controllers
 
         [HttpPost]
 
-        public IActionResult LoginForm(LoginModel model, string CaptchaCode)
+        public IActionResult LoginForm(LoginModel model)
         {
             if (ModelState.IsValid)
             {
@@ -30,7 +30,7 @@ namespace TenderTracker.Controllers
                 {
                     var sessionCaptcha = HttpContext.Session.GetString("CaptchaCode");
 
-                    if (CaptchaCode != sessionCaptcha)
+                    if (model.CaptchaCode != sessionCaptcha)
                     {
                         ViewData["CaptchaError"] = "Invalid CAPTCHA code.";
                         return View(model);
@@ -40,7 +40,7 @@ namespace TenderTracker.Controllers
                     HttpContext.Session.SetString("Name", Convert.ToString(result.Rows[0]["Name"]));
                     HttpContext.Session.SetString("Email", Convert.ToString(result.Rows[0]["Email"]));
                     HttpContext.Session.SetString("id", Convert.ToString(result.Rows[0]["id"]));
-                    TempData["SuccessMessage"] = "Welcome aboard! Lets get started. ";
+                    //TempData["SuccessMessage"] = "Welcome to Dashboard";
                     return RedirectToAction("Dashboard", "Dashboard");
                 }
                 else
@@ -77,7 +77,14 @@ namespace TenderTracker.Controllers
 
         public IActionResult LogOut()
         {
+            //clear session
             HttpContext.Session.Clear();
+
+            // Clear TempData
+            foreach (var key in TempData.Keys.ToList())
+            {
+                TempData.Remove(key);
+            }
             return RedirectToAction("LoginForm");
         }
     }

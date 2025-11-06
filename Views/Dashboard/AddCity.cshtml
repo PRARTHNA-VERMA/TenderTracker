@@ -47,7 +47,8 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label for="StateDropdown" class="fw-bold col-form-label">State</label><br />
+                                    <label for="StateDropdown" class="fw-bold col-form-label">State</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.Citymodel.StateId" class="text-danger"></span> 
                                     @* <span class="text-danger">
                                         @((Model.rowData?.StateId == null || Model.rowData.StateId == 0)
@@ -68,7 +69,8 @@
 
                             <div class="col-md-4">
                                  <div class="form-group">
-                                    <label asp-for="@Model.Citymodel.CityName" class="fw-bold col-form-label">City</label><br />
+                                    <label asp-for="@Model.Citymodel.CityName" class="fw-bold col-form-label">City</label>
+                                    <span class="text-danger">*</span><br />
                                     <span asp-validation-for="@Model.Citymodel.CityName" class="text-danger"></span>
                                     <input asp-for="@Model.Citymodel.CityName" type="text" class="form-control" />
 

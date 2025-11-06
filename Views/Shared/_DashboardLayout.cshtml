@@ -1,5 +1,17 @@
 ﻿@using Microsoft.AspNetCore.Http
 @inject IHttpContextAccessor Accessor 
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+}
+@if (TempData["SessionError"] != null)
+{
+    <script>
+        alert('@TempData["SessionError"]');
+        window.location.href = '/Login/LoginForm';
+    </script>
+}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -43,9 +55,17 @@
                     @*  <li class="nav-item d-none d-md-block"> <a href="../Dashboard/Credit" class="nav-link">Credit</a> </li>
                     <li class="nav-item d-none d-md-block"> <a href="../Dashboard/Debit" class="nav-link">Debit</a> </li> *@
                 </ul> <!--end::Start Navbar Links--> <!--begin::End Navbar Links-->
+                @if (currentController == "Dashboard" && currentAction == "Dashboard")
+                {
+                    <ul class ="navbar-nav ms-auto">
+                        <li class="nav-item" style="padding-left:inherit">
+                            <h4>Welcome to Dashboard</h4>
+                        </li>
+                    </ul>
+                }
                 <ul class="navbar-nav ms-auto">
                     <!--begin::Navbar Search-->
-
+                    
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"> <img src="../../dist/assets/img/logo.png" class="user-image rounded-circle shadow" alt="User Image"> <span class="d-none d-md-inline">@Name</span> </a>
                         @* <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">

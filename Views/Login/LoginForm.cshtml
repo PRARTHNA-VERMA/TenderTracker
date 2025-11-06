@@ -50,8 +50,8 @@
 
                     <!-- CAPTCHA input -->
                     <div class="mb-3">
-                        <input type="text" name="CaptchaCode" class="form-control" placeholder="Enter the text shown above" required />
-                        <span class="text-danger">@ViewData["CaptchaError"]</span>
+                        <input asp-for="CaptchaCode" type="text" class="form-control" placeholder="Enter the text shown above" />
+                        <span asp-validation-for="CaptchaCode" class="text-danger">@ViewData["CaptchaError"]</span>
                     </div>
 
                     <div class="m-3 text-center">

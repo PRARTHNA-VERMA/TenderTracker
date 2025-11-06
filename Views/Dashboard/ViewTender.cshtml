@@ -166,6 +166,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="@Model.rowData.Remarks" class="fw-bold col-form-label">Add Remarks</label>
+                                    <span class="text-danger">*</span>
                                     <span asp-validation-for="@Model.rowData.Remarks" class="text-danger"></span>
 
                                     @if (!string.IsNullOrEmpty(Model.rowData.tender_remark))

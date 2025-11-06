@@ -24,8 +24,20 @@ namespace TenderTracker.Controllers
             _adminRepo = new UploadExcelRepo(configuration, httpContextAccessor);
         }
 
+        protected IActionResult RedirectToLoginIfSessionExpired()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString("id")))
+            {
+                TempData["SessionError"] = "Your session has timed out.";
+                return RedirectToAction("LoginForm", "Login");
+            }
+            return null;
+        }
         public IActionResult Dashboard()
         {
+            var redirect = RedirectToLoginIfSessionExpired();
+            if (redirect != null) return redirect;
+
             // Retrieve user type from session
             var user_type = HttpContext.Session.GetString("user_type").ToString();
             var Name = HttpContext.Session.GetString("Name").ToString();
@@ -511,10 +523,12 @@ public IActionResult ApproveTenders(List<TenderModel> model)
                 if(rowsAffected == -1)
                 {
                     TempData["ErrorMessage"] = " The Tender Number you entered already exists. Kindly provide a new one.";
+                    return RedirectToAction("ViewExcel");
                 }
                 else
                 {
                     TempData["ErrorMessage"] = "No records saved. Please check your data.";
+                    return RedirectToAction("ViewExcel");
                 }
 
             }

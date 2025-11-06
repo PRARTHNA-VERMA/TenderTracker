@@ -74,14 +74,14 @@ namespace TenderTracker.Models
         [RegularExpression(@"^[0-9]\d*$", ErrorMessage = "Invalid EMD Format")]
         public string? EMD { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tender Fee is required.")]
         [RegularExpression(@"^(?!0\d)\d+(\.\d+)?$", ErrorMessage = "Invalid Tender Fee Format")]
         public string? Tender_fee { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Pre bid date is required.")]
         public string? Pre_bid_date { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tender due date is required.")]
         public string? Tender_due_date { get; set; }
 
         [Required]
@@ -97,7 +97,7 @@ namespace TenderTracker.Models
 
         public string? Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Tender File is required.")]
         public IFormFile? tender_file { get; set; }
         public string?tender_file_name { get; set; }
         //public string? Base64Pdf { get; set; } // Optional: for re-rendering the PDF
